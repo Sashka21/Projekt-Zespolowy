@@ -4,19 +4,28 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+
+    [Header("Movement")]
     [SerializeField] private float maxSpeed = 9f;
     [SerializeField] private float rotationSpeed = 300f;
-    [SerializeField] private float deceleration = 9f;
+    [SerializeField] private float deceleration = 9f; // hamowanie
     [SerializeField] private float brakeDeceleration = 28f;
-    [SerializeField] private float acceleration = 16f;
+    [SerializeField] private float acceleration = 16f; // przyspieszenie
+
+    [Header("Offroad (grass) settings")]
+    [SerializeField] private float offroadSpeedFactor = 0.5f; // -- % on offroad zone
+    [SerializeField] private float offroadAccelerationFactor = 0.6f; // -- % acceleration on offroad zone
 
     private Rigidbody2D rb;
 
-    private float moveInput;   // -1 .. 0 .. +1, W/S
-    private float turnInput;   // -1 .. 0 .. +1, A/D
+    private float moveInput; // -1 .. 0 .. +1, W/S
+    private float turnInput; // -1 .. 0 .. +1, A/D
 
     private float currentSpeed = 0f;
     private const float speedEpsilon = 0.05f;
+
+    private float grassCounter = 0;
+    private bool onGrass => grassCounter > 0;
 
     private void Awake()
     {
@@ -25,56 +34,84 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        // Movement input
+
         moveInput = 0f;
         if (Input.GetKey(KeyCode.W)) moveInput = 1f;
         if (Input.GetKey(KeyCode.S)) moveInput = -1f;
 
-        // Turning input
         turnInput = 0f;
         if (Input.GetKey(KeyCode.D)) turnInput = -1f;
         if (Input.GetKey(KeyCode.A)) turnInput = 1f;
+
+
     }
 
     private void FixedUpdate()
     {
-        // Acceleration / Deceleration / Brake Deceleration
+
+        //float targetSpeed = moveInput * maxSpeed;
+
+        float realMaxSpeed = onGrass ? maxSpeed * offroadSpeedFactor : maxSpeed;
+        float realAcceleration = onGrass ? acceleration * offroadAccelerationFactor : acceleration;
+
+        // Acceleration / Deceleration / brake Deceleration
         if (moveInput != 0)
         {
-            bool oppositeDirection = Mathf.Sign(currentSpeed) != Mathf.Sign(moveInput) && currentSpeed != 0f;
 
-            if (oppositeDirection)
+            bool opositeDiraction = Mathf.Sign(currentSpeed) != Mathf.Sign(moveInput) && currentSpeed != 0f;
+            if (opositeDiraction)
             {
-                // Active braking
                 currentSpeed = Mathf.MoveTowards(currentSpeed, 0f, brakeDeceleration * Time.fixedDeltaTime);
             }
             else
             {
-                // Normal acceleration
-                currentSpeed = Mathf.MoveTowards(currentSpeed, moveInput * maxSpeed, acceleration * Time.fixedDeltaTime);
+                currentSpeed = Mathf.MoveTowards(currentSpeed, moveInput * realMaxSpeed, realAcceleration * Time.fixedDeltaTime);
             }
         }
         else
         {
-            // Passive deceleration
             currentSpeed = Mathf.MoveTowards(currentSpeed, 0f, deceleration * Time.fixedDeltaTime);
         }
+        // Limit of speed
+        currentSpeed = Mathf.Clamp(currentSpeed, -realMaxSpeed, realMaxSpeed);
 
-        // Clamp max speed
-        currentSpeed = Mathf.Clamp(currentSpeed, -maxSpeed, maxSpeed);
 
         // Rotation
         bool canTurn = Mathf.Abs(currentSpeed) > speedEpsilon;
 
         if (canTurn)
         {
-            float turnSign = (currentSpeed < 0f) ? -1f : 1f;
-            float rotation = turnInput * rotationSpeed * turnSign * Time.fixedDeltaTime;
-            rb.MoveRotation(rb.rotation + rotation);
-        }
+            // Turn Factor in %
+            float turnFactor = Mathf.InverseLerp(0f, maxSpeed, Mathf.Abs(currentSpeed));
 
-        // Forward movement
+            // Rotation speed depending on Moving speed
+            float effectiveRotationSpeed = rotationSpeed * turnFactor;
+
+            // Inversion for turning behind
+            float turnSign = (currentSpeed < 0f) ? -1f : 1f;
+
+            float rotation = turnInput * effectiveRotationSpeed * turnSign * Time.fixedDeltaTime;
+            rb.MoveRotation(rb.rotation + rotation);
+
+        }
+        // Moving forward
         Vector2 forward = (Vector2)transform.up;
         rb.MovePosition(rb.position + forward * currentSpeed * Time.fixedDeltaTime);
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Offroad"))
+            grassCounter++;
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Offroad"))
+        {
+            grassCounter--;
+            if (grassCounter < 0) grassCounter = 0;
+        }
+    }
+
 }
