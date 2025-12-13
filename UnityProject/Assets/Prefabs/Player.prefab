@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6703085818490000549}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -166,3 +166,9 @@ MonoBehaviour:
   deceleration: 9
   brakeDeceleration: 28
   acceleration: 16
+  forwardKey: 119
+  backwardKey: 115
+  leftKey: 97
+  rightKey: 100
+  offroadSpeedFactor: 0.5
+  offroadAccelerationFactor: 0.6

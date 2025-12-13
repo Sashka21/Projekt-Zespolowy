@@ -2,24 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player_2 : MonoBehaviour
 {
 
     [Header("Movement")]
-    [SerializeField] private float maxSpeed = 5f;
+    [SerializeField] private float maxSpeed = 9f;
     [SerializeField] private float rotationSpeed = 300f;
     [SerializeField] private float deceleration = 9f; // hamowanie
     [SerializeField] private float brakeDeceleration = 28f;
-    [SerializeField] private float acceleration = 13f; // przyspieszenie
-
-
-    [Header("Keybinds")]
-    [SerializeField] private KeyCode forwardKey = KeyCode.W;
-    [SerializeField] private KeyCode backwardKey = KeyCode.S;
-    [SerializeField] private KeyCode leftKey = KeyCode.A;
-    [SerializeField] private KeyCode rightKey = KeyCode.D;
-
-
+    [SerializeField] private float acceleration = 16f; // przyspieszenie
 
     [Header("Offroad (grass) settings")]
     [SerializeField] private float offroadSpeedFactor = 0.5f; // -- % on offroad zone
@@ -45,19 +36,18 @@ public class Player : MonoBehaviour
     {
 
         moveInput = 0f;
-        if (Input.GetKey(forwardKey)) moveInput = 1f;
-        if (Input.GetKey(backwardKey)) moveInput = -1f;
+        if (Input.GetKey(KeyCode.UpArrow)) moveInput = 1f;
+        if (Input.GetKey(KeyCode.DownArrow)) moveInput = -1f;
 
         turnInput = 0f;
-        if (Input.GetKey(rightKey)) turnInput = -1f;
-        if (Input.GetKey(leftKey)) turnInput = 1f;
+        if (Input.GetKey(KeyCode.RightArrow)) turnInput = -1f;
+        if (Input.GetKey(KeyCode.LeftArrow)) turnInput = 1f;
 
 
     }
 
     private void FixedUpdate()
     {
-        
 
         //float targetSpeed = moveInput * maxSpeed;
 
@@ -123,7 +113,5 @@ public class Player : MonoBehaviour
             if (grassCounter < 0) grassCounter = 0;
         }
     }
-
-
 
 }
