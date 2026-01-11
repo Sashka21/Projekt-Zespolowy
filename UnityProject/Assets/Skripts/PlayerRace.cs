@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
+
 public class PlayerRace : MonoBehaviour
 {
+
+    [SerializeField] private RaceTimerUI raceTimer;
+
     [Header("Identity")]
     public string playerName = "Player";
 
@@ -51,6 +55,12 @@ public class PlayerRace : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        raceTimer?.StartTimer();
+        raceTimer?.SetLap(0);
+    }
+
     // Called by FinishLineTrigger when player crosses finish line.
     // raceManager passed explicitly (variant A).
     public void TryFinish(RaceManager raceManager)
@@ -62,6 +72,7 @@ public class PlayerRace : MonoBehaviour
         {
             // complete the lap now
             completedLaps++;
+            raceTimer?.SetLap(completedLaps);
             allCheckpointsPassed = false; // сбрасываем для следующего круга
 
             Debug.Log($"{playerName} completed a lap ({completedLaps}/{totalLaps}) by crossing finish.");
@@ -86,6 +97,8 @@ public class PlayerRace : MonoBehaviour
             raceManager.PlayerFinished(this);
         else
             Debug.LogWarning("TryFinish called but raceManager is null");
+
+        raceTimer?.StopTimer();
     }
 
     // Optional helper to reset state (useful for restarting)
