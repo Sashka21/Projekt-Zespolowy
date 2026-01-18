@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 
 public class RaceTimerUI : MonoBehaviour
@@ -10,55 +8,55 @@ public class RaceTimerUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private TextMeshProUGUI lapText;
 
-    [Header("Race info")]
-    [SerializeField] private string playerName = "Player";
-    [SerializeField] private int totalLaps = 3;
-
+    private PlayerRace playerRace;
     private float startTime;
     private bool running;
 
-    private int currentLap = 0;
-
-    private void Awake()
+    // вызывается ИЗ PlayerRace
+    public void Init(PlayerRace race)
     {
-        playerNameText.text = playerName;
-        UpdateLapText();
-    }
+        playerRace = race;
 
-    public void StartTimer()
-    {
+        if (playerNameText != null)
+            playerNameText.text = race.playerName;
+
         startTime = Time.time;
         running = true;
+    }
+
+    void Update()
+    {
+        if (!running || playerRace == null) return;
+
+        UpdateTimer();
+        UpdateLap();
+    }
+
+    void UpdateTimer()
+    {
+        float elapsed = Time.time - startTime;
+
+        int min = Mathf.FloorToInt(elapsed / 60f);
+        float sec = elapsed % 60f;
+
+        timerText.text = $"{min:00}:{sec:00.00}";
+    }
+
+    void UpdateLap()
+    {
+        if (playerRace.RaceManager == null) return;
+
+        int currentLap = Mathf.Clamp(
+            playerRace.completedLaps + 1,
+            1,
+            playerRace.RaceManager.totalLaps
+        );
+
+        lapText.text = $"Lap: {currentLap}/{playerRace.RaceManager.totalLaps}";
     }
 
     public void StopTimer()
     {
         running = false;
-    }
-
-    public void SetLap(int lap)
-    {
-        currentLap = lap;
-        UpdateLapText();
-    }
-
-    private void Update()
-    {
-        if (!running) return;
-
-        float elapsed = Time.time - startTime;
-        timerText.text = "Time: " + FormatTime(elapsed);
-    }
-
-    private void UpdateLapText()
-    {
-        lapText.text = $"Lap: {currentLap} / {totalLaps}";
-    }
-
-    private string FormatTime(float t)
-    {
-        int min = Mathf.FloorToInt(t / 60f);
-        float sec = t % 60f;
-        return $"{min:00}:{sec:00.00}";
     }
 }

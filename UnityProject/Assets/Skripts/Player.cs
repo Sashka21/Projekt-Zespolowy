@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Player : MonoBehaviour
 {
 
@@ -105,7 +106,7 @@ public class Player : MonoBehaviour
 
         }
         // Moving forward
-        Vector2 forward = (Vector2)transform.up;
+        Vector2 forward = (Vector2)transform.right;
         rb.MovePosition(rb.position + forward * currentSpeed * Time.fixedDeltaTime);
     }
 
@@ -125,5 +126,22 @@ public class Player : MonoBehaviour
     }
 
 
+public void SetControlsForPlayer(int playerID)
+{
+    if (playerID == 1)
+    {
+        forwardKey = KeyCode.W;
+        backwardKey = KeyCode.S;
+        leftKey = KeyCode.A;
+        rightKey = KeyCode.D;
+    }
+    else if (playerID == 2)
+    {
+        forwardKey = KeyCode.UpArrow;
+        backwardKey = KeyCode.DownArrow;
+        leftKey = KeyCode.LeftArrow;
+        rightKey = KeyCode.RightArrow;
+    }
+}
 
 }

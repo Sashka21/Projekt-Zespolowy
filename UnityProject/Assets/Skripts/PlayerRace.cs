@@ -8,13 +8,16 @@ public class PlayerRace : MonoBehaviour
 {
 
     [SerializeField] private RaceTimerUI raceTimer;
+    [SerializeField] private RaceManager raceManager;
+
+    public RaceManager RaceManager => raceManager;
+
 
     [Header("Identity")]
     public string playerName = "Player";
 
     [Header("Race settings")]
     public int totalCheckpointsPerLap = 0; // set by inspector or RaceManager
-    public int totalLaps = 1; // quantity of checkpoints
 
     // runtime
     public int nextCheckpointIndex = 0; // checkpoint expected next (0..N-1)
@@ -57,8 +60,10 @@ public class PlayerRace : MonoBehaviour
 
     private void Start()
     {
-        raceTimer?.StartTimer();
-        raceTimer?.SetLap(0);
+        if (raceTimer != null)
+        {
+            raceTimer.Init(this);
+        }
     }
 
     // Called by FinishLineTrigger when player crosses finish line.
@@ -72,19 +77,22 @@ public class PlayerRace : MonoBehaviour
         {
             // complete the lap now
             completedLaps++;
-            raceTimer?.SetLap(completedLaps);
-            allCheckpointsPassed = false; // сбрасываем для следующего круга
 
-            Debug.Log($"{playerName} completed a lap ({completedLaps}/{totalLaps}) by crossing finish.");
+            nextCheckpointIndex = 0;
 
-            if (completedLaps >= totalLaps)
+            //raceTimer?.SetLap(completedLaps + 1);
+            allCheckpointsPassed = false;
+
+            Debug.Log($"{playerName} completed a lap ({completedLaps}/{RaceManager.totalLaps}) by crossing finish.");
+
+            if (completedLaps >= RaceManager.totalLaps)
             {
                 Finish(raceManager);
             }
         }
         else
         {
-            Debug.Log($"{playerName} tried to finish but hasn't passed all checkpoints yet (completedLaps={completedLaps}, required={totalLaps}).");
+            Debug.Log($"{playerName} tried to finish but hasn't passed all checkpoints yet (completedLaps={completedLaps}, required={RaceManager.totalLaps}).");
         }
     }
 

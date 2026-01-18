@@ -2,26 +2,46 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class RaceManager : MonoBehaviour
 {
-    private List<PlayerRace> finishOrder = new List<PlayerRace>();
+    [Header("Race Settings")]
+    public int totalLaps = 3;
 
-    public void PlayerFinished(PlayerRace player)
+    private List<PlayerRace> players = new List<PlayerRace>();
+    private bool raceFinished = false;
+
+    private IEnumerator Start()
     {
-        if (finishOrder.Contains(player)) return;
+        // ЧЕКАЄМО 1 КАДР, ЩОБ SPAWNER ВСТИГ СТВОРИТИ МАШИНКИ
+        yield return null;
 
-        finishOrder.Add(player);
-        int position = finishOrder.Count;
-        Debug.Log($"{player.playerName} finished at place {position}! time={player.finishTime:F2}s");
+        players.Clear();
+        players.AddRange(FindObjectsOfType<PlayerRace>());
 
-        // Optional: do more � stop player's movement, show UI, check if all finished, etc.
+        foreach (var p in players)
+        {
+            p.totalCheckpointsPerLap = FindTotalCheckpoints();
+        }
+
+        Debug.Log("RaceManager found players: " + players.Count);
     }
 
-    // helper: count checkpoints in scene (optional)
-    public int CountCheckpointsInScene()
+    int FindTotalCheckpoints()
     {
-        var cps = FindObjectsOfType<Checkpoint>();
+        Checkpoint[] cps = FindObjectsOfType<Checkpoint>();
         return cps.Length;
+    }
+
+    // викликається з PlayerRace коли гравець фінішує
+    public void PlayerFinished(PlayerRace player)
+    {
+        if (raceFinished) return;
+
+        Debug.Log(player.playerName + " FINISHED!");
+
+        raceFinished = true;
+
+        // тут можна показати UI переможця
+        // Time.timeScale = 0f; // якщо хочеш зупинити гру
     }
 }
