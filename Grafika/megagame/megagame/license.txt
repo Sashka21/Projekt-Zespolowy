@@ -1,0 +1,66 @@
+﻿Non-Commercial End User License Agreement 1.0
+for the font “MegaGame”, designed by “equeueo”
+(hereinafter referred to as Font Software)
+
+1. BINDING AGREEMENT
+This Agreement is a binding legal contract between You and the Font Designer.
+“Font Software” refers to this font and any copies or parts of it.
+
+2. GRANT OF LICENSE
+The Font Designer grants You a non-exclusive, non-transferable license to use the Font Software, provided that You follow all terms of this Agreement.
+
+2.1 PERSONAL USE
+You may use the Font Software only for your own personal purposes and for your own work.
+This does not include any commercial use or usage as a web-font.
+
+2.2 NO COMMERCIAL USE
+The Font Software and any work created with it may not be used for profit or any commercial project without prior written permission.
+
+2.3 NO SALE OR DISTRIBUTION
+You may not sell, rent, sublicense, distribute, or make the Font Software available to third parties in any way.
+
+2.4 NO MODIFICATION
+You may not modify, adapt, rename, translate, reverse engineer or attempt to discover the source code.
+
+2.5 EMBEDDING
+You may embed the Font Software in documents or applications only if they are provided in a secure format that allows viewing and printing but not editing of the text.
+
+2.6 NO WEBFONT USE
+You may not make the Font Software accessible on any web server for rendering websites.
+
+2.7 BACKUP
+You may make backup copies only for archival purposes, and you must retain exclusive control over them.
+
+2.8 PRINT SHOPS / SERVICE BUREAUS
+A copy of the Font Software may be provided to a print service only for outputting Your work, after which it must be deleted from their system.
+
+3. ATTRIBUTION
+If You make Your work publicly accessible, You must give credit by including:
+
+Name of designer: “equeueo”
+Font name: “MegaGame”
+
+The attribution must not suggest endorsement or collaboration.
+
+4. INDEMNIFICATION
+You agree to use the Font Software according to this Agreement and accept full responsibility for any legal issues arising from misuse.
+
+5. COPYRIGHT
+All rights remain with the Font Designer. The Font Software is protected by copyright and intellectual property laws.
+
+6. WARRANTY
+The Font Software is provided “as is”, without any warranty of performance or usability.
+The Font Designer shall not be liable for any damages or loss arising from its use.
+
+7. TERMINATION
+Any breach of this Agreement automatically terminates your license to use the Font Software, and all copies must be deleted immediately.
+
+8. GOVERNING LAW
+This Agreement is governed by the laws of the Federal Republic of Germany.
+Jurisdiction: Courts of Berlin, Germany.
+
+9. ENTIRE AGREEMENT
+This document contains the entire agreement between You and the Font Designer.
+
+10. SEVERABILITY
+If any part of this Agreement is found invalid, the remaining parts still apply.
