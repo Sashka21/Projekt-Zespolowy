@@ -18,6 +18,7 @@ public class FinishLineTrigger : MonoBehaviour
             return;
         }
 
-        pr.TryFinish(raceManager);
+        pr.TryFinish();
+
     }
 }

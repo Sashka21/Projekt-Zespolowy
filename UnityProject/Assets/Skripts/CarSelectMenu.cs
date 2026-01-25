@@ -9,11 +9,14 @@ public class CarSelectMenu : MonoBehaviour
     public Image player1Image;
     public Image player2Image;
 
-    int p1Index = 0;
-    int p2Index = 0;
+    int p1Index;
+    int p2Index;
 
     void Start()
     {
+        p1Index = PlayerPrefs.GetInt("P1_CarIndex", 0);
+        p2Index = PlayerPrefs.GetInt("P2_CarIndex", 1);
+
         UpdateImages();
     }
 
@@ -53,12 +56,31 @@ public class CarSelectMenu : MonoBehaviour
         UpdateImages();
     }
 
-    // ---- PLAY ----
+    // ---- PLAY (якщо захочеш одразу в гру) ----
     public void PlayGame()
     {
         CarSelectionData.Instance.player1Index = p1Index;
         CarSelectionData.Instance.player2Index = p2Index;
 
+        PlayerPrefs.SetInt("P1_CarIndex", p1Index);
+        PlayerPrefs.SetInt("P2_CarIndex", p2Index);
+        PlayerPrefs.Save();
+
         SceneManager.LoadScene("SampleScene");
+    }
+
+    // ---- GO TO TRACK SELECT (новий метод) ----
+    public void GoToTrackSelect()
+    {
+        // сохраняем выбор
+        PlayerPrefs.SetInt("P1_CarIndex", p1Index);
+        PlayerPrefs.SetInt("P2_CarIndex", p2Index);
+        PlayerPrefs.Save();
+
+        // для текущей сессии
+        CarSelectionData.Instance.player1Index = p1Index;
+        CarSelectionData.Instance.player2Index = p2Index;
+
+        SceneManager.LoadScene("LapsSelect");
     }
 }

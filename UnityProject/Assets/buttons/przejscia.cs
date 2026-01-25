@@ -6,7 +6,7 @@ public class SceneLoader : MonoBehaviour
 {
     private static Stack<string> sceneHistory = new Stack<string>();
 
-    // універсальний перехід на сцену
+    // uniwersalne przejście na scenę
     public void LoadScene(string sceneName)
     {
         sceneHistory.Push(SceneManager.GetActiveScene().name);
@@ -23,7 +23,7 @@ public class SceneLoader : MonoBehaviour
         }
     }
 
-    // --- ЗРУЧНІ МЕТОДИ ДЛЯ КНОПОК ---
+    // --- METODY DLA PRZYCISKÓW ---
 
     public void LoadChooseCarMenu()
     {

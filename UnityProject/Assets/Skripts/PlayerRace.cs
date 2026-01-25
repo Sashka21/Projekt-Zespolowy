@@ -3,29 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-
 public class PlayerRace : MonoBehaviour
 {
-
     [SerializeField] private RaceTimerUI raceTimer;
     [SerializeField] private RaceManager raceManager;
 
     public RaceManager RaceManager => raceManager;
 
-
     [Header("Identity")]
     public string playerName = "Player";
 
     [Header("Race settings")]
-    public int totalCheckpointsPerLap = 0; // set by inspector or RaceManager
+    public int totalCheckpointsPerLap = 0; // set by RaceManager
 
     // runtime
-    public int nextCheckpointIndex = 0; // checkpoint expected next (0..N-1)
+    public int nextCheckpointIndex = 0;
     public int completedLaps = 0;
     public bool IsFinished { get; private set; } = false;
     public float finishTime { get; private set; }
 
-    // flag: the player has passed all checkpoints in the current lap (waiting for the finish)
     private bool allCheckpointsPassed = false;
 
     // called from Checkpoint when player crosses a checkpoint trigger
@@ -33,83 +29,63 @@ public class PlayerRace : MonoBehaviour
     {
         if (IsFinished) return;
 
-        // Only accept checkpoint if it matches expected next
         if (index != nextCheckpointIndex)
-        {
-            // wrong checkpoint -> ignore
             return;
-        }
 
-        // correct checkpoint: advance expectation
         nextCheckpointIndex++;
 
-        // Если дошли до последнего чекпоинта (то есть next == total)
         if (nextCheckpointIndex >= totalCheckpointsPerLap)
         {
-            // Не увеличиваем completedLaps здесь!
-            // Вместо этого отмечаем, что все чекпоинты пройдены и ждём пересечения финиша.
             nextCheckpointIndex = 0;
             allCheckpointsPassed = true;
-            Debug.Log($"{playerName} passed all checkpoints for the lap (ready to finish).");
+            Debug.Log($"{playerName} passed all checkpoints for the lap.");
         }
         else
         {
-            Debug.Log($"{playerName} passed checkpoint {index} (next expected {nextCheckpointIndex}).");
+            Debug.Log($"{playerName} passed checkpoint {index}, next {nextCheckpointIndex}");
         }
     }
 
     private void Start()
     {
         if (raceTimer != null)
-        {
             raceTimer.Init(this);
-        }
     }
 
-    // Called by FinishLineTrigger when player crosses finish line.
-    // raceManager passed explicitly (variant A).
-    public void TryFinish(RaceManager raceManager)
+    // called by FinishLineTrigger
+    public void TryFinish()
+{
+    if (IsFinished) return;
+
+    if (allCheckpointsPassed)
     {
-        if (IsFinished) return;
+        completedLaps++;
+        nextCheckpointIndex = 0;
+        allCheckpointsPassed = false;
 
-        // Require that player passed all checkpoints this lap before finishing
-        if (allCheckpointsPassed)
+        Debug.Log($"{playerName} completed lap {completedLaps}/{RaceManager.totalLaps}");
+
+        if (completedLaps >= RaceManager.totalLaps)
         {
-            // complete the lap now
-            completedLaps++;
-
-            nextCheckpointIndex = 0;
-
-            //raceTimer?.SetLap(completedLaps + 1);
-            allCheckpointsPassed = false;
-
-            Debug.Log($"{playerName} completed a lap ({completedLaps}/{RaceManager.totalLaps}) by crossing finish.");
-
-            if (completedLaps >= RaceManager.totalLaps)
-            {
-                Finish(raceManager);
-            }
-        }
-        else
-        {
-            Debug.Log($"{playerName} tried to finish but hasn't passed all checkpoints yet (completedLaps={completedLaps}, required={RaceManager.totalLaps}).");
+            Finish();
         }
     }
+}
+private void Finish()
+{
+    if (IsFinished) return;
 
-    private void Finish(RaceManager raceManager)
-    {
-        if (IsFinished) return;
-        IsFinished = true;
-        finishTime = Time.time;
-        if (raceManager != null)
-            raceManager.PlayerFinished(this);
-        else
-            Debug.LogWarning("TryFinish called but raceManager is null");
+    IsFinished = true;
+    finishTime = Time.time;
 
-        raceTimer?.StopTimer();
-    }
+    if (raceManager != null)
+        raceManager.PlayerFinished(this);
 
-    // Optional helper to reset state (useful for restarting)
+    raceTimer?.StopTimer();
+}
+
+
+    // optional for restart
     public void ResetRaceState()
     {
         nextCheckpointIndex = 0;

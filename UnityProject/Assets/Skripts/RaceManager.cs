@@ -1,19 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class RaceManager : MonoBehaviour
 {
     [Header("Race Settings")]
-    public int totalLaps = 3;
+    public int totalLaps;
+
+    [Header("Game Over UI")]
+    public GameObject gameOverPanel;
+    public TMP_Text player1Text;
+    public TMP_Text player2Text;
+
+    public bool RaceFinished { get; private set; } = false;
 
     private List<PlayerRace> players = new List<PlayerRace>();
-    private bool raceFinished = false;
+    private List<PlayerRace> finishedPlayers = new List<PlayerRace>();
 
     private IEnumerator Start()
     {
-        // ЧЕКАЄМО 1 КАДР, ЩОБ SPAWNER ВСТИГ СТВОРИТИ МАШИНКИ
         yield return null;
+        totalLaps = GameData.laps;
 
         players.Clear();
         players.AddRange(FindObjectsOfType<PlayerRace>());
@@ -23,25 +31,70 @@ public class RaceManager : MonoBehaviour
             p.totalCheckpointsPerLap = FindTotalCheckpoints();
         }
 
-        Debug.Log("RaceManager found players: " + players.Count);
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(false);
+
+        RaceFinished = false;
+
+        Debug.Log("RaceManager: players = " + players.Count);
     }
 
     int FindTotalCheckpoints()
     {
         Checkpoint[] cps = FindObjectsOfType<Checkpoint>();
-        return cps.Length;
+        int maxIndex = -1;
+
+        foreach (var cp in cps)
+            if (cp.index > maxIndex)
+                maxIndex = cp.index;
+
+        return maxIndex + 1;
     }
 
-    // викликається з PlayerRace коли гравець фінішує
+    // викликається з PlayerRace коли гравець закінчив всі кола
     public void PlayerFinished(PlayerRace player)
     {
-        if (raceFinished) return;
+        if (RaceFinished) return;
 
-        Debug.Log(player.playerName + " FINISHED!");
+        Debug.Log("PlayerFinished: " + player.playerName);
 
-        raceFinished = true;
+        if (!finishedPlayers.Contains(player))
+            finishedPlayers.Add(player);
 
-        // тут можна показати UI переможця
-        // Time.timeScale = 0f; // якщо хочеш зупинити гру
+        if (finishedPlayers.Count >= players.Count)
+        {
+            RaceFinished = true;
+            ShowResults();
+        }
+    }
+
+    void ShowResults()
+    {
+        Debug.Log("SHOW RESULTS");
+
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(true);
+
+        // знаходимо переможця по часу
+        PlayerRace winner = finishedPlayers[0];
+
+        foreach (var p in finishedPlayers)
+            if (p.finishTime < winner.finishTime)
+                winner = p;
+
+        if (players.Count > 0 && player1Text != null)
+        {
+            PlayerRace p1 = players[0];
+            player1Text.text = p1.playerName +  (p1 == winner ? " WIN" : " LOSE");
+        }
+
+        if (players.Count > 1 && player2Text != null)
+        {
+            PlayerRace p2 = players[1];
+            player2Text.text = p2.playerName +  (p2 == winner ? " WIN" : " LOSE");
+        }
+
+        Time.timeScale = 0.01f; // майже стоп, але кнопки працюють
+
     }
 }

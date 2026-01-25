@@ -22,6 +22,8 @@ public class Checkpoint : MonoBehaviour
         {
             pr.PassCheckpoint(index);
             Debug.Log($"{pr.playerName} passed checkpoint {index}");
+            //Debug.Log($"nextCheckpointIndex={nextCheckpointIndex}, total={totalCheckpointsPerLap}");
+
         }
     }
 }

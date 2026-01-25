@@ -28,6 +28,10 @@ MonoBehaviour:
     m_path: Assets/Scenes/SampleScene.unity
   - m_enabled: 1
     m_path: Assets/Scenes/mega_pr.unity
+  - m_enabled: 1
+    m_path: Assets/Scenes/TrackSelect.unity
+  - m_enabled: 1
+    m_path: Assets/Scenes/LapsSelect.unity
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:
     m_Settings: []

@@ -6,8 +6,29 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/mega_pr.unity
+    guid: 20c67f2a0a52e124fa523967253c51c5
+  - enabled: 1
+    path: Assets/Scenes/settingsmenu.unity
+    guid: 6ac4b9163da43a84590bc00e998dc8bd
+  - enabled: 1
+    path: Assets/Scenes/choose_a_car_menu.unity
+    guid: 96ae1de651cc6204eba807bc347e55e9
+  - enabled: 1
+    path: Assets/Scenes/TrackSelect.unity
+    guid: 5920820513459ea4fba9dd488924fb83
+  - enabled: 1
     path: Assets/Scenes/SampleScene.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
+    guid: 69a7d885cd2155444b33a06123ee1ace
+  - enabled: 1
+    path: Assets/Scenes/torigra.unity
+    guid: e6d3dd6f75506e94f99a6e42ddf4b70d
+  - enabled: 1
+    path: Assets/Scenes/llright.unity
+    guid: 7872c56b383f3ce41b4f19f363b94a27
+  - enabled: 1
+    path: Assets/Scenes/mainmenu.unity
+    guid: 8453774de1e0b2f4fa1efe0d8098b285
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

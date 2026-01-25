@@ -143,5 +143,8 @@ public void SetControlsForPlayer(int playerID)
         rightKey = KeyCode.RightArrow;
     }
 }
+    public float CurrentSpeed => Mathf.Abs(currentSpeed);
+    public bool IsAccelerating => moveInput > 0f;
+    public bool IsBraking => moveInput < 0f;
 
 }
